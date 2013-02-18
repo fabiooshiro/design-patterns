@@ -2,12 +2,16 @@ package state;
 
 public class MaquinaDoPokemon {
 
-	private static int SEM_BRINQUEDOS = 0;
-	private static int SEM_MOEDA = 1;
-	private static int COM_MOEDA = 2;
-	private static int VENDIDO = 3;
+//	private static int SEM_BRINQUEDOS = 0;
+//	private static int SEM_MOEDA = 1;
+//	private static int COM_MOEDA = 2;
+//	private static int VENDIDO = 3;
 	
-	private int state = SEM_BRINQUEDOS;
+	// criamos uma variavel separada para nao quebrar tudo
+	private AbstractEstado estado = new SemBrinquedos();
+	
+	// no final removemos a variavel duplicada
+	//private int state = SEM_BRINQUEDOS;
 	private int totalDeBrinquedos = 0;
 	
 	public MaquinaDoPokemon() {
@@ -19,6 +23,12 @@ public class MaquinaDoPokemon {
 	}
 
 	public String colocarMoeda(){
+		// no final removemos isso
+		//if(state == SEM_MOEDA){ // no inicio mantemos para nao quebrar todos os testes
+		//	state = COM_MOEDA;
+		//}
+		return estado.colocarMoeda();
+		/*
 		if(state == COM_MOEDA){
 			return "Cabe apenas uma moeda, jah tem uma.";
 		}else if(state == SEM_BRINQUEDOS){
@@ -31,9 +41,16 @@ public class MaquinaDoPokemon {
 		}else{
 			throw new RuntimeException("Estado desconhecido " + state);
 		}
+		*/
 	}
 	
 	public String devolverMoeda(){
+		// no final removemos isso
+		//if(state == COM_MOEDA){
+		//	state = SEM_MOEDA;
+		//}
+		return estado.devolverMoeda();
+		/*
 		if(state == COM_MOEDA){
 			state = SEM_MOEDA;
 			return "Moeda devolvida.";
@@ -46,9 +63,16 @@ public class MaquinaDoPokemon {
 		}else{
 			throw new RuntimeException("Estado desconhecido " + state);
 		}
+		*/
 	}
 
 	public String acionarAlavanca(){
+		// no final removemos isso
+		//if(state == COM_MOEDA){
+		//	state = VENDIDO;
+		//}
+		return estado.acionarAlavanca();
+		/*
 		if(state == COM_MOEDA){
 			state = VENDIDO;
 			return "Vc vira a alavanca e " + entregarBrinquedo();
@@ -61,9 +85,12 @@ public class MaquinaDoPokemon {
 		}else{
 			throw new RuntimeException("Estado desconhecido " + state);
 		}
+		*/
 	}
 	
 	public String entregarBrinquedo(){
+		return estado.entregarBrinquedo();
+		/*
 		String mensagem = "";
 		if(state == VENDIDO){
 			mensagem += "um brinquedo aparece!";
@@ -82,13 +109,28 @@ public class MaquinaDoPokemon {
 			mensagem += "Gire a alavanca, ou pegue a moeda de volta.";
 		}
 		return mensagem;
+		*/
 	}
 	
 	public String colocarBrinquedos(int qtd){
 		assert qtd > 0;
-		state = SEM_MOEDA;
+		//state = SEM_MOEDA;
+		estado = new SemMoeda(this);
 		totalDeBrinquedos += qtd;
 		return "Maquina com " + qtd + " brinquedo(s).";
+	}
+
+	public void setState(AbstractEstado estado) {
+		this.estado = estado;
+	}
+
+	public void diminuirBrinquedos(int valorParaDiminuir) {
+		assert valorParaDiminuir > 0;
+		this.totalDeBrinquedos -= valorParaDiminuir;
+	}
+
+	public int getTotalDeBrinquedos() {
+		return totalDeBrinquedos;
 	}
 	
 }
